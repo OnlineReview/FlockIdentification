@@ -109,8 +109,8 @@ for ptr in range(15):
     
     
     if len(clusterflocks)==pipesize:        
-        binflockslist=flockfile.getflocks(pipesize, membership, radius,0)# list of all flocks in form of binary string
-        
+#         binflockslist=flockfile.getflocks(pipesize, membership, radius,0)# list of all flocks in form of binary string
+        binflockslist=flockfile.checkvalidflocks(pipesize, membership, radius, 0)
         orlist=0
         for bins in binflockslist:            
             orlist=orlist | int(bins,2)
