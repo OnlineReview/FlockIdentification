@@ -21,11 +21,13 @@ pipesize=13
 flockfile=FlockFile(clusterflocks)
 allpointsallsnapshot={}
 timeinstant=0
+fulldata=x.readCSVTakeSS()
 inittime=time.time()
 for ptr in range(15):
     
     timeinstant=30*ptr
-    df=x.readCSVTakeSS(timeinstant)
+#     df=x.readCSVTakeSS(timeinstant)
+    df=fulldata[timeinstant]
     if len(df)==0:
         continue
     starttime=time.time()
