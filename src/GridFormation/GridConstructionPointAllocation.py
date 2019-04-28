@@ -2,6 +2,7 @@ import pandas as pd
 from GridFormation import Point
 from GridFormation import Triangle
 from math import sqrt,floor
+import numpy as np
 class GridConstructionPointAllocation(object):
     '''
     classdocs
@@ -10,42 +11,66 @@ class GridConstructionPointAllocation(object):
     datafrme=pd.DataFrame()  
     radius=0
 
-    def __init__(self, datafrme,radius):
+    def __init__(self, dataframe,radius):
         '''
         Constructor
         '''
         self.pointid=0
-        self.datafrme=datafrme
+        self.dataframe=dataframe
         self.radius=radius
      
     def getMaxPointId(self):
         return self.pointid   
+    def evaluateTriangle(self,rows,Triangledict):
+        point =Point.Point(rows[2],rows[3])
+        point.id=int(rows[0])
+        self.pointid=self.pointid+1
+        trianG = Triangle.Triangle(self.radius)
+        triangle=trianG.giveTriangleFromPoint(point)
+             
+        point.isOnVertex=False
+        if point.x==triangle.uponex and point.y ==triangle.uponey:
+                point.isOnVertex=True
+        if point.x==triangle.uptwox and point.y==triangle.uptwoy:
+            point.isOnVertex=True
+        if point.x==triangle.downonex and point.y==triangle.downoney:
+            point.isOnVertex=True
+        if point.x==triangle.downtwox and point.y==triangle.downtwoy:
+            point.isOnVertex=True
+             
+        if triangle in Triangledict:
+            Triangledict[triangle].append(point)
+        else:
+            Triangledict[triangle]=[]
+            Triangledict[triangle].append(point)
+    
     def makedict(self):
         Triangledict={}
         self.pointid=0
-        for index,rows in self.datafrme.iterrows():
+        resultset=[self.evaluateTriangle(rows, Triangledict)for rows in self.dataframe]
+# #         for index,rows in self.datafrme.iterrows():
             
-            point =Point.Point(rows[2],rows[3])
-            point.id=int(rows[0])
-            self.pointid=self.pointid+1
-            trianG = Triangle.Triangle(self.radius)
-            triangle=trianG.giveTriangleFromPoint(point)
+#             point =Point.Point(rows[2],rows[3])
+#             point.id=int(rows[0])
+#             self.pointid=self.pointid+1
+#             trianG = Triangle.Triangle(self.radius)
+#             triangle=trianG.giveTriangleFromPoint(point)
             
-            point.isOnVertex=False
-            if point.x==triangle.uponex and point.y ==triangle.uponey:
-                point.isOnVertex=True
-            if point.x==triangle.uptwox and point.y==triangle.uptwoy:
-                point.isOnVertex=True
-            if point.x==triangle.downonex and point.y==triangle.downoney:
-                point.isOnVertex=True
-            if point.x==triangle.downtwox and point.y==triangle.downtwoy:
-                point.isOnVertex=True
+#             point.isOnVertex=False
+#             if point.x==triangle.uponex and point.y ==triangle.uponey:
+#                 point.isOnVertex=True
+#             if point.x==triangle.uptwox and point.y==triangle.uptwoy:
+#                 point.isOnVertex=True
+#             if point.x==triangle.downonex and point.y==triangle.downoney:
+#                 point.isOnVertex=True
+#             if point.x==triangle.downtwox and point.y==triangle.downtwoy:
+#                 point.isOnVertex=True
             
-            if triangle in Triangledict:
-                Triangledict[triangle].append(point)
-            else:
-                Triangledict[triangle]=[]
-                Triangledict[triangle].append(point)
+#             if triangle in Triangledict:
+#                 Triangledict[triangle].append(point)
+#             else:
+#                 Triangledict[triangle]=[]
+#                 Triangledict[triangle].append(point)
         return Triangledict
     
     def getPointList(self,Triangledict):
