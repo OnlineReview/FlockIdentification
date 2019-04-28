@@ -44,7 +44,21 @@ class FlockFile(object):
             print("centre is 2 "+str(center2.x)+" "+str(center2.y))
             return center2
         
-        
+    
+    def checkvalidflocks(self, pipesize, membership, radius, start):
+        end=pipesize-1-start
+        flocksidentified=[]
+        keylist=list(self.flocks.keys())
+        for keys in self.flocks[keylist[start]].keys():
+            for keye in self.flocks[keylist[end]].keys():
+                k=keys & keye
+                setBits=[ones for ones in bin(k)[2:] if ones=='1']
+                if len(setBits) >= membership:
+                    flocksidentified.append(k) 
+        if len(flocksidentified) ==0:
+            return flocksidentified
+        else:
+            return self.getflocks(pipesize, membership, radius, start)  
        
     def getflocks(self,pipesize,membership,radius,start):        
         end=pipesize-1-start
