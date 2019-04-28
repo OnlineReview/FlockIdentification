@@ -2,6 +2,7 @@
 import glob;
 import csv
 import pandas as pd
+import numpy as np
 class Snapshots(object):
     '''
     classdocs
@@ -29,11 +30,15 @@ class Snapshots(object):
                     lst=line.split()
                     output.write(str(count)+","+lst[0]+","+lst[1]+","+lst[2]+'\n' )
        
-    def readCSVTakeSS(self,num):
+    def readCSVTakeSS(self):
         df=pd.read_csv(self.csvpath,low_memory=False, index_col=None, header = None)          
-        ddf=pd.DataFrame()     
-        for index,rows in df.iterrows():           
-            if(rows[1]==num):
-                ddf=ddf.append(rows)
-       
+        df=df.values.tolist()            
+        ddf={}    
+        for rows in df:  
+            time=rows[1]
+            if time not in ddf:
+                ddf[time]=  np.array([rows])
+            else:
+                ddf[time]=np.concatenate((ddf[time],[rows]),axis=0)
+
         return ddf
